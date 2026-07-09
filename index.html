@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Showcase — AGRIX Prototype</title>
+<link rel="icon" type="image/png" href="assets/agrix-mark-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.showcase-header{background:var(--ink); color:var(--cream); padding:2.2rem 1.6rem 1.8rem;}
+.showcase-header .inner{max-width:1300px; margin:0 auto;}
+.showcase-header .brand{display:flex; align-items:center; gap:.6rem; margin-bottom:1rem;}
+.showcase-header .brand img{height:32px;}
+.showcase-header .brand-text{font-family:var(--font-display); font-weight:700; font-size:1.35rem; color:#fff;}
+.showcase-header h1{font-size:1.6rem; max-width:700px; color:#fff;}
+.showcase-header p{color:#C9BE9E; max-width:640px; font-size:.92rem;}
+.showcase-nav{background:var(--paper); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:30;}
+.showcase-nav .inner{max-width:1300px; margin:0 auto; display:flex; gap:.3rem; padding:.4rem 1.6rem; overflow-x:auto;}
+.showcase-tab{padding:.7em 1.1em; border:none; background:none; font-size:.85rem; font-weight:600; color:var(--muted); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap;}
+.showcase-tab.active{color:var(--paddy-dim); border-color:var(--paddy);}
+.showcase-body{max-width:1300px; margin:0 auto; padding:1.8rem 1.6rem 4rem;}
+.showcase-role-pane{display:none;}
+.showcase-role-pane.active{display:block; animation:fadeUp .25s ease;}
+.showcase-role-intro{max-width:760px; margin-bottom:1.4rem;}
+.showcase-role-intro h2{font-size:1.25rem;}
+.platform-heading{display:flex; align-items:center; gap:.5rem; margin:1.6rem 0 1rem; font-family:var(--font-display); font-size:1.05rem; font-weight:700;}
+.platform-heading .line{flex:1; height:1px; background:var(--line);}
+
+.thumb-grid{display:flex; flex-wrap:wrap; gap:1.4rem;}
+.thumb-col{display:flex; flex-direction:column; align-items:center; gap:.55rem;}
+.thumb-label{font-size:.8rem; font-weight:700; text-align:center; max-width:220px;}
+
+.thumb-browser{width:300px; border-radius:10px; overflow:hidden; background:#1a1710; border:1px solid var(--line); box-shadow:var(--shadow); position:relative;}
+.thumb-browser .bar{display:flex; align-items:center; gap:.35rem; padding:.4rem .55rem; background:#2b2618;}
+.thumb-browser .bar .dot{width:7px; height:7px; border-radius:50%; display:inline-block;}
+.thumb-browser .bar .r{background:#c6573f;} .thumb-browser .bar .y{background:#e8a33d;} .thumb-browser .bar .g{background:#8fbf3f;}
+.thumb-browser .bar .url{margin-left:.4rem; font-family:var(--font-mono); font-size:.6rem; color:#c9c2ac; background:#1a1710; border-radius:8px; padding:.15em .6em; flex:1; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
+.thumb-viewport{width:300px; height:188px; overflow:hidden; position:relative; background:#fff;}
+.thumb-viewport iframe{width:1280px; height:800px; border:none; transform:scale(0.234375); transform-origin:top left; pointer-events:none;}
+.thumb-open{position:absolute; inset:0; background:transparent; border:none; cursor:zoom-in;}
+
+.thumb-phone{width:150px; background:#141210; border-radius:20px; padding:8px 6px; box-shadow:var(--shadow); position:relative;}
+.thumb-phone::before{content:""; position:absolute; top:12px; left:50%; transform:translateX(-50%); width:38px; height:4px; border-radius:3px; background:#3a352a; z-index:2;}
+.thumb-phone .thumb-viewport-phone{width:100%; height:280px; overflow:hidden; border-radius:13px; position:relative; background:#fff;}
+.thumb-phone .thumb-viewport-phone iframe{width:480px; height:896px; border:none; transform:scale(0.3125); transform-origin:top left; pointer-events:none;}
+
+.thumb-modal-overlay{display:none; position:fixed; inset:0; background:rgba(20,17,10,.75); z-index:100; align-items:center; justify-content:center; padding:2rem;}
+.thumb-modal-overlay.show{display:flex;}
+.thumb-modal{background:#111; border-radius:14px; overflow:hidden; box-shadow:0 30px 60px rgba(0,0,0,.5); position:relative; display:flex; flex-direction:column;}
+.thumb-modal.desktop{width:min(90vw,1100px); height:min(85vh,720px);}
+.thumb-modal.phone{width:min(90vw,420px); height:min(88vh,860px);}
+.thumb-modal .mbar{display:flex; align-items:center; gap:.5rem; padding:.55rem .8rem; background:#221e15;}
+.thumb-modal .mbar .dot{width:9px; height:9px; border-radius:50%;}
+.thumb-modal .mbar .r{background:#c6573f;} .thumb-modal .mbar .y{background:#e8a33d;} .thumb-modal .mbar .g{background:#8fbf3f;}
+.thumb-modal .mbar .url{margin-left:.5rem; font-family:var(--font-mono); font-size:.7rem; color:#c9c2ac; flex:1;}
+.thumb-modal .mbar .close{background:none; border:none; color:#c9c2ac; cursor:pointer; font-size:1rem; padding:.2em .5em;}
+.thumb-modal .mbar .close:hover{color:#fff;}
+.thumb-modal iframe{flex:1; width:100%; border:none; background:#fff;}
+
+@media (max-width:700px){
+  .thumb-grid{justify-content:center;}
+}
+</style>
+</head>
+<body>
+
+<header class="showcase-header">
+  <div class="inner">
+    <div class="brand"><img src="assets/agrix-mark-64.png" alt="AGRIX"> <span class="brand-text">AGRIX</span></div>
+    <h1>Showcase Prototipe AGRIX — Semua Fitur, per Peran &amp; Platform</h1>
+    <p>Setiap peran menampilkan seluruh tools yang relevan sekaligus, dalam dua platform: 💻 versi Web (index.html) dan 📱 versi App (mobile-app.html). Klik salah satu thumbnail untuk membuka tampilan penuh &amp; interaktif.</p>
+  </div>
+</header>
+
+<nav class="showcase-nav">
+  <div class="inner" id="role-tabs">
+    <button class="showcase-tab active" data-role="petani">🌱 Petani</button>
+    <button class="showcase-tab" data-role="penyuluh">🤝 Penyuluh / Gapoktan</button>
+    <button class="showcase-tab" data-role="pemerintah">🏛️ Pemerintah / Dinas</button>
+    <button class="showcase-tab" data-role="peneliti">🔬 Peneliti / Akademisi</button>
+  </div>
+</nav>
+
+<main class="showcase-body" id="showcase-body"></main>
+
+<div class="thumb-modal-overlay" id="thumb-modal-overlay">
+  <div class="thumb-modal" id="thumb-modal">
+    <div class="mbar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="url" id="modal-url"></span>
+      <button class="close" id="modal-close">✕ Tutup</button>
+    </div>
+    <iframe id="modal-iframe" src=""></iframe>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   KONFIGURASI PENTING — GANTI setelah kamu publish folder agrix-web dan
+   agrix-app ke GitHub Pages masing-masing. Contoh format URL GitHub Pages:
+   https://USERNAME.github.io/NAMA-REPO
+   Jangan pakai trailing slash "/" di akhir.
+   ===================================================================== */
+const WEB_BASE = "https://USERNAME.github.io/agrix-web";   // <-- GANTI: URL folder "laptop" (versi Web)
+const APP_BASE = "https://USERNAME.github.io/agrix-app";   // <-- GANTI: URL folder "hp" (versi App)
+
+const ROLES = {
+  petani:{
+    title:"Petani",
+    desc:"Menerima rekomendasi tanam-panen &amp; jual-simpan dari AI Decision Engine, memantau Digital Twin lahan, dan berkomunikasi dengan penyuluh lewat fitur Pesan.",
+    screens:[
+      {key:"dashboard", label:"Dashboard"},
+      {key:"kenapa", label:"Kenapa AGRIX?"},
+      {key:"peta", label:"Peta Digital Twin", variants:[
+        {label:"Level 1 — Peta Indonesia", params:{sub:"indonesia"}},
+        {label:"Level 2 — Wilayah Jambi", params:{sub:"region", region:"Jambi"}},
+        {label:"Level 3 — Digital Twin 3D", params:{sub:"twin", region:"Jambi", plot:"A001"}}
+      ]},
+      {key:"lahan", label:"Detail Lahan", variants:[
+        {label:"Tab Satelit & IoT", params:{sub:"t-satelit"}},
+        {label:"Tab Iklim (BMKG)", params:{sub:"t-iklim"}},
+        {label:"Tab Ekonomi", params:{sub:"t-ekonomi"}},
+        {label:"Tab Partisipatif", params:{sub:"t-partisipatif"}},
+        {label:"Tab Jejak Karbon", params:{sub:"t-karbon"}},
+        {label:"Tab AI Insight", params:{sub:"t-insight"}}
+      ]},
+      {key:"decision", label:"AI Decision Engine"},
+      {key:"iklimkarbon", label:"Climate-Carbon Intel."},
+      {key:"input", label:"Input Data Tani"},
+      {key:"pesan", label:"Pesan"},
+      {key:"komunitas", label:"Komunitas"},
+      {key:"edukasi", label:"Edukasi"},
+      {key:"notifikasi", label:"Notifikasi"},
+      {key:"profil", label:"Profil", variants:[
+        {label:"Info Akun", params:{sub:"p-akun"}},
+        {label:"Lahan Saya", params:{sub:"p-lahan"}},
+        {label:"Preferensi", params:{sub:"p-preferensi"}},
+        {label:"Keamanan", params:{sub:"p-keamanan"}}
+      ]}
+    ]
+  },
+  penyuluh:{
+    title:"Penyuluh / Gapoktan",
+    desc:"Jembatan literasi digital — memantau petani binaan, meneruskan rekomendasi AI ke petani non-smartphone, dan mengelola input data kolektif.",
+    screens:[
+      {key:"dashboard", label:"Dashboard"},
+      {key:"kenapa", label:"Kenapa AGRIX?"},
+      {key:"peta", label:"Peta Digital Twin", variants:[
+        {label:"Level 1 — Peta Indonesia", params:{sub:"indonesia"}},
+        {label:"Level 2 — Wilayah Jambi", params:{sub:"region", region:"Jambi"}},
+        {label:"Level 3 — Digital Twin 3D", params:{sub:"twin", region:"Jambi", plot:"A001"}}
+      ]},
+      {key:"lahan", label:"Detail Lahan", variants:[
+        {label:"Tab Satelit & IoT", params:{sub:"t-satelit"}},
+        {label:"Tab Ekonomi", params:{sub:"t-ekonomi"}},
+        {label:"Tab Jejak Karbon", params:{sub:"t-karbon"}}
+      ]},
+      {key:"decision", label:"AI Decision Engine"},
+      {key:"gapoktan", label:"Petani Binaan"},
+      {key:"iklimkarbon", label:"Climate-Carbon Intel."},
+      {key:"input", label:"Input Kolektif"},
+      {key:"pesan", label:"Pesan"},
+      {key:"komunitas", label:"Komunitas"},
+      {key:"edukasi", label:"Edukasi"},
+      {key:"notifikasi", label:"Notifikasi"},
+      {key:"profil", label:"Profil", variants:[
+        {label:"Info Akun", params:{sub:"p-akun"}},
+        {label:"Preferensi", params:{sub:"p-preferensi"}},
+        {label:"Keamanan", params:{sub:"p-keamanan"}}
+      ]}
+    ]
+  },
+  pemerintah:{
+    title:"Pemerintah / Dinas",
+    desc:"Peta ketahanan pangan antarwilayah, tren produksi nasional, serta simulasi kebijakan seperti subsidi benih tahan kering.",
+    screens:[
+      {key:"dashboard", label:"Dashboard"},
+      {key:"kenapa", label:"Kenapa AGRIX?"},
+      {key:"peta", label:"Peta Digital Twin", variants:[
+        {label:"Level 1 — Peta Indonesia", params:{sub:"indonesia"}},
+        {label:"Level 2 — Wilayah Lampung", params:{sub:"region", region:"Lampung"}},
+        {label:"Level 3 — Digital Twin 3D", params:{sub:"twin", region:"Lampung", plot:"A014"}}
+      ]},
+      {key:"nasional", label:"Dashboard Nasional"},
+      {key:"laporan", label:"Laporan & Simulasi"},
+      {key:"roadmap", label:"Roadmap Implementasi"},
+      {key:"iklimkarbon", label:"Climate-Carbon Intel."},
+      {key:"pesan", label:"Pesan"},
+      {key:"notifikasi", label:"Notifikasi"},
+      {key:"profil", label:"Profil", variants:[
+        {label:"Info Akun", params:{sub:"p-akun"}},
+        {label:"Preferensi", params:{sub:"p-preferensi"}},
+        {label:"Keamanan", params:{sub:"p-keamanan"}}
+      ]}
+    ]
+  },
+  peneliti:{
+    title:"Peneliti / Akademisi",
+    desc:"Mengakses dataset mentah dari lima sumber data dan memvalidasi rekomendasi AI Decision Engine sebelum dipublikasikan ke petani.",
+    screens:[
+      {key:"dashboard", label:"Dashboard"},
+      {key:"kenapa", label:"Kenapa AGRIX?"},
+      {key:"peta", label:"Peta Digital Twin", variants:[
+        {label:"Level 1 — Peta Indonesia", params:{sub:"indonesia"}},
+        {label:"Level 2 — Wilayah Papua", params:{sub:"region", region:"Papua"}},
+        {label:"Level 3 — Digital Twin 3D", params:{sub:"twin", region:"Papua", plot:"A050"}}
+      ]},
+      {key:"lahan", label:"Detail Lahan", variants:[
+        {label:"Tab Satelit & IoT", params:{sub:"t-satelit"}},
+        {label:"Tab AI Insight", params:{sub:"t-insight"}}
+      ]},
+      {key:"dataset", label:"Dataset & Model AI"},
+      {key:"roadmap", label:"Roadmap Implementasi"},
+      {key:"iklimkarbon", label:"Climate-Carbon Intel."},
+      {key:"pesan", label:"Pesan"},
+      {key:"notifikasi", label:"Notifikasi"},
+      {key:"profil", label:"Profil", variants:[
+        {label:"Info Akun", params:{sub:"p-akun"}},
+        {label:"Keamanan", params:{sub:"p-keamanan"}}
+      ]}
+    ]
+  }
+};
+
+const body = document.getElementById("showcase-body");
+
+if(WEB_BASE.includes("USERNAME") || APP_BASE.includes("USERNAME")){
+  const warn = document.createElement("div");
+  warn.style.cssText = "max-width:1300px; margin:1rem auto 0; padding:.9rem 1.2rem; background:#fff3cd; border:1px solid #f0c36d; border-radius:10px; color:#6b4c00; font-size:.85rem;";
+  warn.innerHTML = "⚠️ <b>Belum dikonfigurasi:</b> edit <code>WEB_BASE</code> dan <code>APP_BASE</code> di bagian atas file <code>index.html</code> showcase ini dengan URL GitHub Pages folder <b>agrix-web</b> dan <b>agrix-app</b> kamu, baru semua thumbnail di bawah akan muncul.";
+  document.body.insertBefore(warn, document.querySelector(".showcase-nav").nextSibling);
+}
+
+function buildUrl(base, role, screen, extra){
+  const p = new URLSearchParams({demo:role, screen:screen});
+  if(extra) Object.entries(extra).forEach(([k,v])=> p.set(k,v));
+  return `${base}?${p.toString()}`;
+}
+function webUrl(role, screen, extra){ return buildUrl(`${WEB_BASE}/index.html`, role, screen, extra); }
+function appUrl(role, screen, extra){ return screen==="dashboard" ? `${APP_BASE}/index.html?demo=${role}` : buildUrl(`${APP_BASE}/index.html`, role, screen, extra); }
+
+function desktopThumb(roleKey, toolLabel, subLabel, screenKey, extra){
+  const url = webUrl(roleKey, screenKey, extra);
+  return `
+    <div class="thumb-col">
+      <span class="thumb-label">${toolLabel}${subLabel ? " — "+subLabel : ""}</span>
+      <div class="thumb-browser">
+        <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="url">agrix.id/${screenKey}</span></div>
+        <div class="thumb-viewport">
+          <iframe src="${url}" loading="lazy"></iframe>
+          <button class="thumb-open" data-src="${url}" data-mode="desktop" data-label="${toolLabel}${subLabel ? " — "+subLabel : ""} — Web"></button>
+        </div>
+      </div>
+    </div>`;
+}
+function phoneThumb(roleKey, toolLabel, subLabel, screenKey, extra){
+  const url = appUrl(roleKey, screenKey, extra);
+  return `
+    <div class="thumb-col">
+      <span class="thumb-label">${toolLabel}${subLabel ? " — "+subLabel : ""}</span>
+      <div class="thumb-phone">
+        <div class="thumb-viewport-phone">
+          <iframe src="${url}" loading="lazy"></iframe>
+          <button class="thumb-open" data-src="${url}" data-mode="phone" data-label="${toolLabel}${subLabel ? " — "+subLabel : ""} — App"></button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function buildPane(roleKey){
+  const r = ROLES[roleKey];
+  const pane = document.createElement("div");
+  pane.className = "showcase-role-pane";
+  pane.id = "pane-"+roleKey;
+
+  let desktopThumbs = "", phoneThumbs = "";
+  r.screens.forEach(s=>{
+    if(s.variants && s.variants.length){
+      s.variants.forEach(v=>{
+        desktopThumbs += desktopThumb(roleKey, s.label, v.label, s.key, v.params);
+        phoneThumbs += phoneThumb(roleKey, s.label, v.label, s.key, v.params);
+      });
+    } else {
+      desktopThumbs += desktopThumb(roleKey, s.label, null, s.key, null);
+      phoneThumbs += phoneThumb(roleKey, s.label, null, s.key, null);
+    }
+  });
+
+  pane.innerHTML = `
+    <div class="showcase-role-intro">
+      <h2>${r.title}</h2>
+      <p class="muted">${r.desc}</p>
+      <p class="small muted" style="margin-top:.4rem;">Tools bertingkat (Peta Digital Twin, Detail Lahan, Profil) ditampilkan lengkap dengan seluruh sub-levelnya — bukan cuma tampilan awal.</p>
+    </div>
+
+    <div class="platform-heading">💻 Versi Web — semua tools ${r.title}<div class="line"></div></div>
+    <div class="thumb-grid">${desktopThumbs}</div>
+
+    <div class="platform-heading">📱 Versi App — semua tools ${r.title}<div class="line"></div></div>
+    <div class="thumb-grid">${phoneThumbs}</div>
+  `;
+
+  return pane;
+}
+
+Object.keys(ROLES).forEach((key,i)=>{
+  const pane = buildPane(key);
+  if(i===0) pane.classList.add("active");
+  body.appendChild(pane);
+});
+
+document.querySelectorAll(".showcase-tab").forEach(tab=>{
+  tab.addEventListener("click", ()=>{
+    document.querySelectorAll(".showcase-tab").forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
+    document.querySelectorAll(".showcase-role-pane").forEach(p=>p.classList.remove("active"));
+    document.getElementById("pane-"+tab.dataset.role).classList.add("active");
+  });
+});
+
+const overlay = document.getElementById("thumb-modal-overlay");
+const modal = document.getElementById("thumb-modal");
+const modalIframe = document.getElementById("modal-iframe");
+const modalUrl = document.getElementById("modal-url");
+
+document.addEventListener("click", e=>{
+  const btn = e.target.closest(".thumb-open");
+  if(!btn) return;
+  modal.className = "thumb-modal " + btn.dataset.mode;
+  modalIframe.src = btn.dataset.src;
+  modalUrl.textContent = btn.dataset.label;
+  overlay.classList.add("show");
+});
+document.getElementById("modal-close").addEventListener("click", closeModal);
+overlay.addEventListener("click", e=>{ if(e.target === overlay) closeModal(); });
+function closeModal(){
+  overlay.classList.remove("show");
+  modalIframe.src = "";
+}
+</script>
+</body>
+</html>
